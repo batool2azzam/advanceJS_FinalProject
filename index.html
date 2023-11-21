@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="./node_modules/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <style>
+    body{
+        background-color: rgb(241, 240, 240);
+    }
+    .lds-heart {
+      display: inline-block;
+      position: relative;
+      width: 80px;
+      height: 80px;
+      transform: rotate(45deg);
+      transform-origin: 40px 40px;
+    }
+    .lds-heart div {
+      top: 32px;
+      left: 32px;
+      position: absolute;
+      width: 32px;
+      height: 32px;
+      background: #fff;
+      animation: lds-heart 1.2s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
+    }
+    .lds-heart div:after,
+    .lds-heart div:before {
+      content: " ";
+      position: absolute;
+      display: block;
+      width: 32px;
+      height: 32px;
+      background: #fff;
+    }
+    .lds-heart div:before {
+      left: -24px;
+      border-radius: 50% 0 0 50%;
+    }
+    .lds-heart div:after {
+      top: -24px;
+      border-radius: 50% 50% 0 0;
+    }
+    @keyframes lds-heart {
+      0% {
+        transform: scale(0.95);
+      }
+      5% {
+        transform: scale(1.1);
+      }
+      39% {
+        transform: scale(0.85);
+      }
+      45% {
+        transform: scale(1);
+      }
+      60% {
+        transform: scale(0.95);
+      }
+      100% {
+        transform: scale(0.9);
+      }
+    }
+
+    
+    </style>
+</head>
+
+<body >
+    <!-- Loader -->
+    <div id="loader" style="background-color: rgba(145, 144, 144, 0.237); position: fixed; top: 0; right: 0; left: 0; bottom: 0; display: flex; margin: auto; justify-content: center; align-items: center; z-index: 9999; width: 100px; height: 100px; border-radius: 20px;">
+      <div class="lds-heart"><div></div></div>
+    </div>
+    <!-- Add Post Button -->
+    <div id="add" class="rounded-circle bg-primary shadow-lg" data-bs-toggle="modal" data-bs-target="#createPostModal"
+        style="cursor: pointer; position: fixed; z-index: 999; width: 70px; height: 70px;  bottom: 5%; right: 7%; font-size: 40px; color: white; text-align: center;">
+        +
+    </div> 
+    <!-- Alerts -->
+    <div id="successAlert" class="alert d-none" role="alert" 
+        style="position: fixed; z-index: 9999; width: 22%; bottom: 0; right: 20px;">
+        Done successfully!
+    </div> 
+    <!-- Create Post MODAL -->
+    <div class="modal fade" id="createPostModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Create New Post</h1>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="mb-3">
+                  <label for="recipient-name" class="col-form-label">Image:</label>
+                  <input type="file" class="form-control" id="postImg" >
+                </div>
+                <div class="mb-3">
+                  <label for="message-text" class="col-form-label">Title:</label>
+                  <input type="text" class="form-control" id="posttitle" value="Hi All">
+                </div>
+                <div class="mb-3">
+                  <label for="message-text" class="col-form-label">Body:</label>
+                  <input type="text" class="form-control" id="postBody" value="Free Palestine">
+                </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button onclick="CreatePost()" type="button" class="btn btn-primary">Create</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Delete Post MODAL -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Confirm Deleting</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            Are You shour You Want to Delete this Post?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-danger" onclick="deletePost()">Delete Post</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Edit Post MODAL -->
+    <div class="modal fade" id="editPostModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Post</h1>
+          </div>
+          <div class="modal-body">
+            <form>
+              
+                <div class="mb-3">
+                  <label for="message-text" class="col-form-label">Body:</label>
+                  <input type="text" class="form-control" id="edit-postBody" >
+                </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button onclick="editPost()" type="button" class="btn btn-primary">Edit</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Login MODAL -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="exampleModalLabel">Login</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="mb-3">
+                  <label for="recipient-name" class="col-form-label">userName:</label>
+                  <input type="text" class="form-control" id="username" value="salam22">
+                </div>
+                <div class="mb-3">
+                  <label for="message-text" class="col-form-label">password:</label>
+                  <input type="password" class="form-control" id="password" value="123456">
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button onclick="handleLogin()" type="button" class="btn btn-primary">Login</button>
+            </div>
+          </div>
+        </div>
+    </div>
+    <!-- Regester MODAL -->
+    <div class="modal fade" id="regesterModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="exampleModalLabel">Regester</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <form>
+                    <div class="mb-3">
+                        <label for="recipient-name" class="col-form-label">Name:</label>
+                        <input type="text" class="form-control" id="reg-name" value="Salma Abbas">
+                    </div>
+                    <div class="mb-3">
+                        <label for="recipient-name" class="col-form-label">userName:</label>
+                        <input type="text" class="form-control" id="reg-username" value="salma22">
+                    </div>
+                    <div class="mb-3">
+                      <label for="message-text" class="col-form-label">password:</label>
+                      <input type="password" class="form-control" id="reg-password" value="123456">
+                    </div>
+                  </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button onclick="handleRegester()" type="button" class="btn btn-primary">Regester</button>
+                </div>
+              </div>
+            </div>
+    </div>
+    <!-- BODY -->
+    <!-- Navbar -->
+    <div class="container ">
+        <div class="d-flex justify-content-center">
+            <div class="col-9">
+                <nav class="navbar navbar-expand-lg bg-body-tertiary shadow pt-4 mb-3">
+                    <div class="container-fluid">
+                        <a class="navbar-brand" href="index.html">Tarmeez</a>
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                                <li class="nav-item">
+                                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" onclick="profileClicked()">Profile</a>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div class="d-flex justify-content-end w-100 " id="buttons">
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- Posts -->
+    <div id="posts">
+
+        <!-- <div class="container">
+            <div class="d-flex justify-content-center">
+                <div class="col-9">
+                    <div class="card mt-5 shadow">
+                        <div class="card-header ">
+                            <img id="avatar" class="rounded-circle border border-1" src="./assets/explorePic5.jpg" alt="" style="width: 40px; height: 40px;">
+                            <b id="username">@Batool22</b>
+                        </div>
+                        <div class="card-body ">
+                            <img id="img" class="w-100 object-fit-cover" src="./assets/explorePic1.jpg" alt="" style="height: 500px;">
+                            <h6 id="time" class="mt-1 text-black-50"> 2 houes ago</h6>
+                            <h5 id="tit" class="card-title my-2">Special title treatment</h5>
+                            <p id="body" class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia excepturi perferendis obcaecati veritatis, provident aliquid, nesciunt magni reprehenderit repellendus tempora porro hic rerum laboriosam? Quam doloremque ad harum magnam dolore.</p>
+                            <hr>
+                            <h6>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16">
+                                    <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z"/>
+                                  </svg>
+                                   (<span>4</span>) Comments
+                            </h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+        </div> -->
+    </div>
+
+    
+</body>
+    <script src="logic.js"></script>
+</html>

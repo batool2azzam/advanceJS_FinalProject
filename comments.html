@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="./node_modules/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <style>
+    body{
+        background-color: rgb(241, 240, 240);
+    }
+    </style>
+</head>
+
+<body >
+    <!-- BODY -->
+    <!-- Navbar -->
+    <div class="container ">
+        <div class="d-flex justify-content-center">
+            <div class="col-9">
+                <nav class="navbar navbar-expand-lg bg-body-tertiary shadow pt-4 mb-3">
+                    <div class="container-fluid">
+                        <a class="navbar-brand" href="index.html">Tarmeez</a>
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                                <li class="nav-item">
+                                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" onclick="profileClicked()">Profile</a>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div class="d-flex justify-content-end w-100 " id="buttons">
+                            <div class="card-header" style="margin-right:12px">
+                                <img id="currentUserImg" class="rounded-circle border border-1" src="./assets/explorePic5.jpg" alt="" style="width: 40px; height: 40px;">
+                                <b id="currentUsername">@Batool22</b>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- Post Owner -->
+    <div class="container">
+        <div class="d-flex justify-content-center">
+            <div class="col-9" style="margin-bottom:-20px">
+                    <h1 id="postName">Batool22 Post</h1>
+            </div>
+        </div>
+    </div>
+    <!-- Posts -->
+    <div id="posts">
+         <div class="container">
+            <div class="d-flex justify-content-center">
+                <div class="col-9">
+                    <div class="card mt-5 shadow">
+                        <div class="card-header ">
+                            <img id="avatar" class="rounded-circle border border-1" src="./assets/explorePic5.jpg" alt="" style="width: 40px; height: 40px;">
+                            <b id="username">@Batool22</b>
+                        </div>
+                        <div class="card-body ">
+                            <img id="img" class="w-100 object-fit-cover" src="./assets/explorePic1.jpg" alt="" style="height: 500px;">
+                            <h6 id="time" class="mt-1 text-black-50"> 2 houes ago</h6>
+                            <h5 id="tit" class="card-title my-2">Special title treatment</h5>
+                            <p id="body" class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia excepturi perferendis obcaecati veritatis, provident aliquid, nesciunt magni reprehenderit repellendus tempora porro hic rerum laboriosam? Quam doloremque ad harum magnam dolore.</p>
+                            <hr>
+                            <h6>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16">
+                                    <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z"/>
+                                  </svg>
+                                   (<span>4</span>) Comments
+                            </h6>
+                            
+                           
+                        </div>
+                       
+                    </div>
+                    <div class="card-text shadow" id="comments" style="background-color: rgb(255 255 255);padding-left:20px;padding-top: 10px;margin-top: 35px;padding-bottom:5px;margin-bottom: 5%;border-radius: 6px;">
+                        
+                        <div class="" style="margin-right:12px; margin-top:0px">
+                            <img id="currentUserImg" class="rounded-circle border border-1" src="./assets/explorePic5.jpg" alt="" style="width: 40px; height: 40px;">
+                            <b id="currentUsername">@Batool22</b>
+                            <p>lorm makdvknklenmbvklanbnNJKNHJHNJUUHJ</p>
+                        </div>
+                        <hr>
+                        
+                    </div>
+                    <div class="input-group mb-3" id="addCommentDiv">
+                        <input id="newComment" type="text" class="form-control"  placeholder="Write Your Comment Here..." aria-label="Recipient's username" aria-describedby="button-addon2">
+                        <button class="btn btn-primary" type="button" onclick=addComment()>Send</button>
+                      </div>
+                </div>
+                
+            </div>
+        
+        </div>
+    </div>
+</body>
+
+<script>
+    
+    const user=getCurrentUser();
+    const token=localStorage.getItem("token");
+    const urlParams= new URLSearchParams(window.location.search);
+    let id =urlParams.get("postId");
+
+    /////// Get Current User /////////
+    function getCurrentUser(){
+        let currentUser=null
+        const storageUser= localStorage.getItem("user");
+        if (storageUser!=null){
+        currentUser= JSON.parse(storageUser)
+        }
+        return currentUser;
+    }
+
+    /////// Get One Post with Comments /////////
+    function getOnePost(){
+        axios.get(`https://tarmeezacademy.com/api/v1/posts/${id}`)
+        .then(response => {
+        
+        const post = response.data.data;
+        let buttons=``
+        if(user!=null && user.id==post.author.id){
+          buttons=`<button type="button" class="btn btn-danger" onclick="setEditPostModal(${post.id})" data-bs-toggle="modal" data-bs-target="#deleteModal" style="float : right">Delete</button>
+          <button type="button" class="btn btn-secondary edit-post-button" data-bs-toggle="modal" data-bs-target="#editPostModal" onclick="setEditPostModal(${post.id}, '${post.body}')" style="float : right; margin-right:5px">Edit</button>`      }
+        
+        document.getElementById("postName").innerHTML=post.author.username +" Post";
+        const comments = post.comments;
+        console.log(comments)
+        document.getElementById("posts").innerHTML =
+            `<div class="container">
+            <div class="d-flex justify-content-center">
+                <div class="col-9">
+                    <div class="card mt-5 shadow"  style="cursor: pointer;">
+                        <div class="card-header ">
+                            <img id="avatar" class="rounded-circle border border-1" src="${post.author.profile_image}" alt="" style="width: 40px; height: 40px;">
+                            <b id="username">@${post.author.username}</b>
+                            ${buttons}
+                        </div>
+                        <div class="card-body ">
+                            <img id="img" class="w-100 object-fit-cover" src="${post.image}" alt="" style="height: 500px;">
+                            <h6 id="time" class="mt-1 text-black-50">${post.created_at}</h6>
+                            <h5 id="tit" class="card-title my-2">${post.title}</h5>
+                            <p id="body" class="card-text">${post.body}</p>
+                            <hr>
+                            <h6>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16">
+                                    <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z"/>
+                                    </svg>
+                                    (<span>${post.comments_count}</span>) Comments
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="card-text shadow" id="comments" style="background-color: rgb(255 255 255);padding-left:20px;padding-top: 10px;margin-top: 35px;padding-bottom:5px;margin-bottom: 5%;border-radius: 6px;">
+                            
+                        </div> 
+                    <div class="input-group mb-3" id="addCommentDiv">
+                            <input id="newComment" type="text" class="form-control" placeholder="Write Your Comment Here..." aria-label="Recipient's username" aria-describedby="button-addon2">
+                            <button class="btn btn-primary" type="button" onclick=addComment()>Send</button>
+                        </div>
+                </div>
+            </div>
+      </div>`;
+      comments.forEach(comment => {
+      document.getElementById("comments").innerHTML +=`
+                        <div style="margin-right:12px">
+                            <img id="currentUserImg" class="rounded-circle border border-1" src="${comment.author.profile_image}" alt="" style="width: 40px; height: 40px;">
+                            <b id="currentUsername">@${comment.author.username}</b>
+                            <p>${comment.body}</p>
+                        </div>
+                        <hr>`
+                    });
+      document.getElementById("addCommentDiv").innerHTML=`
+                <input id="newComment" type="text" class="form-control" placeholder="Write Your Comment Here..." aria-label="Recipient's username" aria-describedby="button-addon2">
+                <button class="btn btn-primary" type="button" onclick=addComment()>Send</button>`
+    
+        })
+        .catch(error => console.log('error', error));
+    }
+    
+    /////// Add Comment Handling /////////
+    function addComment(){
+        newComment=document.getElementById("newComment").value
+        axios.post(`https://tarmeezacademy.com/api/v1/posts/${id}/comments`, {
+        "body": newComment
+        }, {
+            headers: {
+                "authorization": `Bearer ${token}`
+            }
+        }).then((response) => {
+            console.log(response)
+            getOnePost()
+        })
+    }
+
+
+    getOnePost()
+
+    
+</script>
+</html>
