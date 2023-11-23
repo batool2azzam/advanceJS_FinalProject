@@ -8,7 +8,6 @@
     toggleLoader(false)
     axios.get(`https://tarmeezacademy.com/api/v1/posts?limit=4&page=${page}`)
     .then(response => {
-      toggleLoader(true)
       localStorage.setItem("last_page", response.data.meta.last_page);
       const posts = response.data.data;
       posts.forEach(post => {
@@ -18,7 +17,7 @@
           buttons=`<button type="button" class="btn btn-danger" onclick="setEditPostModal(${post.id})" data-bs-toggle="modal" data-bs-target="#deleteModal" style="float : right">Delete</button>
           <button type="button" class="btn btn-secondary edit-post-button" data-bs-toggle="modal" data-bs-target="#editPostModal" onclick="setEditPostModal(${post.id}, '${post.body}')" style="float : right; margin-right:5px">Edit</button>`      }
         document.getElementById("posts").innerHTML +=
-          `<div class="container" id="post_${post.id}">
+          `<div class="container" id="post_${post.id}" >
             <div class="d-flex justify-content-center">
                 <div class="col-9">
                     <div class="card mt-5 shadow"  style="cursor: pointer;">
@@ -46,8 +45,10 @@
         </div>`;
       });
     })
-    .catch(error => console.log('error', error));
-  }
+    .catch(error => console.log('error', error))
+    .finally(()=>{
+      toggleLoader(true)
+    })  }
 
 
   /////// Create-New-Post Handling /////////
@@ -60,9 +61,7 @@
     form.append("image", image);
     form.append("title", title);
     form.append("body", body);
-
-    const token = localStorage.getItem("token");
-
+    toggleLoader(true)
     axios.post("https://tarmeezacademy.com/api/v1/posts", form, {
       headers: {
         "Content-Type": "multipart/form-data",
@@ -70,7 +69,7 @@
       }
     })
       .then((response) => {
-        getPosts()
+        toggleLoader(false)
         console.log(response);
         const modal = document.getElementById('createPostModal');
         bootstrap.Modal.getInstance(modal).hide();
@@ -110,18 +109,20 @@
                 </div>
             </div>
         </div>` + document.getElementById("posts").innerHTML;
+        getPosts()
       })
       .catch((error) => {
         console.error('An error occurred:', error);
         showAlert(error.response.data.message + "!", "alert-danger");
-      });
+      }).finally(()=>{
+        toggleLoader(true)
+      }) 
   }
 
 
   //////==== UI Starts =======/////////
   function changeButtons() {
       const varToken = localStorage.getItem("token");
-
       if (varToken) {
           document.getElementById("buttons").innerHTML = 
               `<div class="card-header" style="margin-right:12px">
@@ -158,6 +159,7 @@
   function handleLogin(){
     const username=document.getElementById("username").value;
     const password=document.getElementById("password").value;
+    toggleLoader(false)
 
     axios.post("https://tarmeezacademy.com/api/v1/login",{
         "username" : username,
@@ -175,7 +177,9 @@
     ).catch((error) => {
         console.error('An error occurred:', error);
         showAlert(error.response.data.message+"!", "alert-danger")
-    });
+    }).finally(()=>{
+      toggleLoader(true)
+    })
   }
   ////// Login Handling End/////////
 
@@ -184,6 +188,7 @@
     const name=document.getElementById("reg-name").value;
     const username=document.getElementById("reg-username").value;
     const password=document.getElementById("reg-password").value;
+    toggleLoader(false)
 
     axios.post("https://tarmeezacademy.com/api/v1/register",{
         "name" : name,
@@ -202,12 +207,13 @@
     ).catch((error) => {
         console.error('An error occurred:', error);
         showAlert(error.response.data.message +"!", "alert-danger")
-    });
+    }).finally(()=>{
+      toggleLoader(true)
+    })
   } 
   ////// Regester Handling End/////////
 
   ////// Logout Handling Starts/////////
-
   function handleLogout(){
     localStorage.removeItem("token")
     localStorage.removeItem("user")
@@ -265,12 +271,10 @@
 
   }
 
-
   //////// Edit Post Handling /////////
-
   function editPost(){
     const body = document.getElementById("edit-postBody").value;
-
+    toggleLoader(false)
     axios.put(`https://tarmeezacademy.com/api/v1/posts/${currentPostId}`, {
       "body":body
     }, {
@@ -285,11 +289,14 @@
     }).catch((error) => {
       console.error('An error occurred:', error);
       showAlert(error.response.data.message + "!", "alert-danger");
-    });
+    }).finally(()=>{
+      toggleLoader(true)
+    })
   }
 
   //////// Delete Post Handling /////////
   function deletePost(){
+    toggleLoader(false)
     axios.delete(`https://tarmeezacademy.com/api/v1/posts/${currentPostId}`,{
       headers: {
         "authorization": `Bearer ${token}`
@@ -309,7 +316,9 @@
     }).catch((error) => {
       console.error('An error occurred:', error);
       showAlert(error.response.data.message + "!", "alert-danger");
-    });
+    }).finally(()=>{
+      toggleLoader(true)
+    })
   }
 
 

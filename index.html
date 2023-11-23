@@ -87,7 +87,7 @@
         Done successfully!
     </div> 
     <!-- Create Post MODAL -->
-    <div class="modal fade" id="createPostModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="createPostModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="position: fixed; z-index: 99999; top:8%;">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -101,11 +101,11 @@
                 </div>
                 <div class="mb-3">
                   <label for="message-text" class="col-form-label">Title:</label>
-                  <input type="text" class="form-control" id="posttitle" value="Hi All">
+                  <input type="text" class="form-control" id="posttitle" >
                 </div>
                 <div class="mb-3">
                   <label for="message-text" class="col-form-label">Body:</label>
-                  <input type="text" class="form-control" id="postBody" value="Free Palestine">
+                  <input type="text" class="form-control" id="postBody">
                 </div>
             </form>
           </div>
@@ -117,7 +117,7 @@
       </div>
     </div>
     <!-- Delete Post MODAL -->
-    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="position: fixed; z-index: 99999; top:8%;">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -135,7 +135,7 @@
       </div>
     </div>
     <!-- Edit Post MODAL -->
-    <div class="modal fade" id="editPostModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="editPostModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="position: fixed; z-index: 99999; top:8%;">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -158,7 +158,7 @@
       </div>
     </div>
     <!-- Login MODAL -->
-    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="position: fixed; z-index: 99999; top:8%;">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
@@ -185,7 +185,7 @@
         </div>
     </div>
     <!-- Regester MODAL -->
-    <div class="modal fade" id="regesterModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="regesterModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="position: fixed; z-index: 99999; top:8%;">
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
@@ -217,19 +217,19 @@
     </div>
     <!-- BODY -->
     <!-- Navbar -->
-    <div class="container ">
-        <div class="d-flex justify-content-center">
+    <div class="container"style="position: fixed; z-index: 9999; left: 0; right: 0; top:0;">
+        <div class="d-flex justify-content-center " >
             <div class="col-9">
-                <nav class="navbar navbar-expand-lg bg-body-tertiary shadow pt-4 mb-3">
+                <nav class="navbar navbar-expand-lg bg-body-tertiary shadow-lg pt-4 mb-3">
                     <div class="container-fluid">
                         <a class="navbar-brand" href="index.html">Tarmeez</a>
                         <div class="collapse navbar-collapse" id="navbarSupportedContent">
                             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                                 <li class="nav-item">
-                                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                                    <a class="nav-link active" aria-current="page" href="index.html">Home</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" onclick="profileClicked()">Profile</a>
+                                    <a class="nav-link" onclick="profileClicked()" style="cursor: pointer;">Profile</a>
                                 </li>
                             </ul>
                         </div>
@@ -242,7 +242,7 @@
         </div>
     </div>
     <!-- Posts -->
-    <div id="posts">
+    <div id="posts" style=" margin-top: 4%">
 
         <!-- <div class="container">
             <div class="d-flex justify-content-center">
