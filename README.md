@@ -22,7 +22,7 @@ Welcome to the JS Social Media Website! This project is a dynamic social media p
 ## Getting Started
 
 1. **Clone the Repository:**
-   git clone https://github.com/your-username/js-social-media-website.git
+   git clone https://github.com/batool2azzam/advanceJS_FinalProject
    cd js-social-media-website
    
 
